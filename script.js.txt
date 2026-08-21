@@ -1,0 +1,142 @@
+// 1. Full Syllabus Data
+const rawTopics = [
+  "BODMAS Rule", "Delhi Sultanate", "National & International News", "Stone Age", "Advent of Europeans", "Basic Percentage Problems", "Making of Constitution", "Tenses", "Basics of Economy", "Figure Series", "Motion", "Simple Ratio", "Basic Average", "Basic Profit & Loss", "Cell", "Matter", "Basics of Environmental Sciences", "Classical Dance", "Statement & Conclusion", "Synonyms & Antonyms", "Basic Time & Work", "Longitude and Latitude", "Salient Features of the Constitution", "Simple Interest", "Basic Speed Problems", "Folk Dances of India", "Indus Valley Civilization", "Spotting Errors", "Classification (Odd One Out)", "Earth's Interior and Plate Tectonics", "Linear Equations", "Plant Tissue and Animal Tissue", "Demand and Supply", "Economy & Financial Updates", "Lines & Angles", "Socio-Religious Reforms", "Area - Triangle, Circle, Quadrilateral", "Force and Laws of Motion", "Para Jumbles", "Preamble", "Atom and its Structure", "Mirror & Water Image", "Rocks, Continents and Oceans", "Trigonometric Ratios & Identities", "Bar Graph", "Census", "Subject-Verb Agreement", "Vedic Age", "Divisibility Rules", "Part 1 and Part 2 of the Constitution", "Plant and Animal Kingdom", "Statement & Assumption", "Geomorphology and Landforms", "Pipes & Cisterns", "Successive Discounts", "Vijayanagara and Bahmani Kingdoms", "Ecosystem", "One Word Substitution", "Relative Speed", "Revolt of 1857", "Musical Instruments", "National Income", "Series - Number & Alphabet", "Triangles - Properties & Theorems", "Articles & Determiners", "Atmosphere", "Science, Space & Tech Developments", "Volume - Cube, Cuboid, Cylinder", "Coding-Decoding", "Fundamental Rights", "Gravitation and Work Done", "Pie Chart", "Inference & Conclusion", "Jainism and Buddhism", "Nervous System", "Surds & Indices", "Compound Ratio", "Percentage Change", "Periodic Table", "Wind, Ocean Current and Cyclone", "DPSP and Fundamental Duties", "Gharanas", "Paper Cutting & Folding", "Weighted Average", "Compound Interest", "Indian National Congress", "Inflation and Unemployment", "Sentence Correction", "Cause & Effect", "India and its Location", "Mahajanapadas", "Quadratic Equations", "Cloze Test", "Complementary Angles", "Hormones and Plant Movements", "Sound", "Himalayas", "President and Vice President of India", "Remainder Theorem", "Sports Events & Tournaments", "Blood Relations", "Important Days", "Marked Price & Selling Price", "Mughal Empire", "Chemical Reactions", "Prepositions", "Trophic Dynamics and Energy Transfer", "Work & Wages", "Circles - Chords, Tangents, Arcs", "Peninsular Plateaus", "Prime Minister and Council of Ministers", "Trains", "Bengal Partition", "Budget and Taxation", "Embedded Figures", "Idioms & Phrases", "Line Graph", "Maurya Dynasty", "Reproduction", "Volume - Cone, Sphere, Hemisphere", "Books and Authors", "Conjunctions", "Northern Plain and Islands", "Unit Digit & Last Two Digits", "Parliament", "Reflection and Refraction", "Square Root & Cube Root", "Venn Diagrams", "Awards, Appointments & Honors", "Himalayan River System", "Sports", "Successive Percentage", "Digestion and Respiration", "Post-Maurya Dynasties", "Proportion & Variation", "Vocabulary in Context", "Average Speed", "Direction & Distance", "Gandhian Era", "Monetary Policy", "Difference Between SI & CI", "Metals and Non-Metals", "Modals & Auxiliaries", "State Legislature", "Algebraic Identities", "Marathas", "Order & Ranking", "Peninsular Rivers", "Biogeochemical Cycles", "Factors & Multiples", "Height & Distance", "International Organisations", "Dams, Lakes and Waterfalls", "Dishonest Dealer Problems", "Human Eye and Vision", "Phrasal Verbs", "Alternate Day Problems", "Counting Figures", "Emergency & Constitutional Amendment", "Gupta Dynasty", "Boats & Streams", "CDM and Simon Commission", "Circulatory System and Excretory System", "Sentence Improvement", "Important Days, Themes & Summits", "Monsoon", "Money and Banking", "Quadrilaterals & Polygons", "Mathematical Operations", "National Organisations", "Supreme Court and High Court", "Surface Area Problems", "Acid, Base and Salt", "Fill in the Blanks", "Forest and Grassland", "Table-based DI", "Diseases", "Post-Gupta Dynasties", "Prime & Composite Numbers", "Seating Arrangement - Linear", "Approximation Techniques", "Direct & Indirect Speech", "Electricity", "Local Government", "Festivals of India", "Partnership Problems", "Population & Depreciation Problems", "Soil and Agriculture", "Age-based Average Problems", "Balance of Payment and Poverty", "Quit India Movement", "Seating Arrangement - Circular", "Author's Tone & Purpose", "Bhakti and Sufi Movements", "Environmental Conventions", "Installment Problems", "Constitutional and Non-Constitutional Bodies", "Government Schemes & Policy Initiatives", "Minerals", "Polynomials & Factorization", "Active & Passive Voice", "Dice & Cubes", "Maximum & Minimum Values", "Sangam Age", "Efficiency-based Problems", "Government Schemes", "Mixture Problems in Profit/Loss", "Nutrients", "Carbon and its Compounds", "Puzzles", "Spelling Errors", "World Map", "Circular Motion & Races", "Coordinate Geometry Basics", "Important Acts", "Magnetic Effect of Electric Current", "Combined Solid Problems", "Five Year Plan and Industrial Policy Resolution", "Governor-General and Viceroy", "Syllogism", "Conditionals", "Mixed DI", "National Parks", "Tripartite Struggle and Cholas", "Awards and Honours", "Fraction & Decimals", "Hereditary and Evolution", "Sources of the Indian Constitution", "Transport"
+];
+
+// Map raw topics to object structure
+let syllabusData = rawTopics.map((topic, index) => ({
+  id: index + 1,
+  subject: 'SSC CGL Syllabus', 
+  topic: topic.trim(),
+  completed: false
+}));
+
+// DOM Elements
+const topicListEl = document.getElementById('topicList');
+const progressCircleEl = document.getElementById('progressCircle');
+const progressTextEl = document.getElementById('progressText');
+const nextTopicNameEl = document.getElementById('nextTopicName');
+const examDateInput = document.getElementById('examDateInput');
+const daysLeftText = document.getElementById('daysLeftText');
+const searchInput = document.getElementById('searchInput');
+
+/**
+ * Render Syllabus Topics with Optional Search Filter
+ */
+const renderTopics = (searchTerm = '') => {
+  topicListEl.innerHTML = ''; 
+
+  // Filter topics based on search input
+  const filteredData = syllabusData.filter(item => 
+    item.topic.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  if (filteredData.length === 0) {
+    topicListEl.innerHTML = `<li class="topic-item"><span class="topic-item__subject">No topics found matching "${searchTerm}"</span></li>`;
+    return;
+  }
+
+  filteredData.forEach(item => {
+    const tagClass = item.completed ? 'topic-item__tag--completed' : 'topic-item__tag--pending';
+    const tagText = item.completed ? 'Done' : 'Pending';
+    const nameClass = item.completed ? 'is-completed' : '';
+    const isChecked = item.completed ? 'checked' : '';
+
+    const li = document.createElement('li');
+    li.className = 'topic-item';
+    
+    li.innerHTML = `
+      <div class="topic-item__left">
+        <input type="checkbox" class="topic-item__checkbox" id="topic-${item.id}" ${isChecked}>
+        <div class="topic-item__info">
+          <span class="topic-item__subject">${item.subject}</span>
+          <label class="topic-item__name ${nameClass}" for="topic-${item.id}">${item.topic}</label>
+        </div>
+      </div>
+      <span class="topic-item__tag ${tagClass}">${tagText}</span>
+    `;
+
+    const checkbox = li.querySelector('.topic-item__checkbox');
+    checkbox.addEventListener('change', (e) => toggleCompletion(item.id, e.target.checked));
+    topicListEl.appendChild(li);
+  });
+};
+
+const toggleCompletion = (id, isChecked) => {
+  const topicIndex = syllabusData.findIndex(item => item.id === id);
+  if (topicIndex !== -1) {
+    syllabusData[topicIndex].completed = isChecked;
+    // Re-render keeping the current search term active
+    renderTopics(searchInput.value); 
+    updateDashboard();
+  }
+};
+
+/**
+ * Calculate Progress Percentage
+ */
+const updateProgress = () => {
+  if (syllabusData.length === 0) return;
+  const totalTopics = syllabusData.length;
+  const completedTopics = syllabusData.filter(item => item.completed).length;
+  const percentage = Math.round((completedTopics / totalTopics) * 100);
+
+  progressTextEl.textContent = `${percentage}%`;
+  progressCircleEl.style.background = `conic-gradient(var(--accent-teal) ${percentage}%, var(--border-color) 0)`;
+};
+
+/**
+ * Calculate Days Left based on user input
+ */
+const updateDaysLeft = () => {
+  const selectedDate = new Date(examDateInput.value);
+  const today = new Date();
+  
+  today.setHours(0, 0, 0, 0);
+  selectedDate.setHours(0, 0, 0, 0);
+
+  const diffTime = selectedDate - today;
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+  if (diffDays >= 0) {
+    daysLeftText.textContent = diffDays;
+    daysLeftText.style.color = "var(--accent-orange)";
+  } else {
+    daysLeftText.textContent = "0";
+    daysLeftText.style.color = "#ef4444"; 
+  }
+};
+
+/**
+ * Update the Bottom Bar
+ */
+const updateBottomBar = () => {
+  const nextTopic = syllabusData.find(item => !item.completed);
+  if (nextTopic) {
+    nextTopicNameEl.textContent = nextTopic.topic;
+  } else {
+    nextTopicNameEl.textContent = "All caught up!";
+  }
+};
+
+const updateDashboard = () => {
+  updateProgress();
+  updateBottomBar();
+};
+
+// Event Listeners
+examDateInput.addEventListener('change', updateDaysLeft);
+
+// Search Bar Event Listener
+searchInput.addEventListener('input', (e) => {
+  renderTopics(e.target.value);
+});
+
+// Initialize
+const initApp = () => {
+  updateDaysLeft();
+  renderTopics();
+  updateDashboard();
+};
+
+document.addEventListener('DOMContentLoaded', initApp);
